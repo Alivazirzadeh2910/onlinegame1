@@ -50,6 +50,7 @@ function formatName(name) {
 server.on("connection", (socket) => {
 
     console.log("A player connected!");
+    socket.send("CONNECTED_TO_SERVER");
 
 
     socket.on("message", async (message) => {
