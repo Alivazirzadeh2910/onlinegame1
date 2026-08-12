@@ -12,9 +12,20 @@ const supabase = createClient(
 
 const PASSWORD_SECRET = process.env.PASSWORD_SECRET;
 
-const server = new WebSocket.Server({ port: PORT });
+const http = require("http");
 
-console.log(`Server started on port ${PORT}`);
+const httpServer = http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end("OnlineGame server is running!");
+});
+
+const server = new WebSocket.Server({
+    server: httpServer
+});
+
+httpServer.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server started on port ${PORT}`);
+});
 
 
 // تبدیل رمز به مقدار غیرقابل‌مشاهده برای ذخیره در دیتابیس
