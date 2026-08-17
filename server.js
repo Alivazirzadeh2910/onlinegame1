@@ -124,7 +124,24 @@ server.on("connection", (socket) => {
                 return;
             }
 
+            // بررسی اینکه نام قبلاً استفاده نشده باشد
+            const { data: existingName, error: nameSearchError } = await supabase
+                .from("users")
+                .select("id")
+                .eq("name", formattedName)
+                .maybeSingle();
 
+            if (nameSearchError) {
+                console.log("Supabase name search error:", nameSearchError);
+                socket.send("SERVER_ERROR");
+                return;
+            }
+
+            if (existingName) {
+                socket.send("NAME_EXISTS");
+                return;
+            }
+            
             // ذخیره کاربر جدید
             const { error: insertError } = await supabase
                 .from("users")
